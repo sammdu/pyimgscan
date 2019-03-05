@@ -1,11 +1,10 @@
-# pyimgscan: open-source document scanning tool
-![MIT License](https://img.shields.io/badge/LICENSE-MIT-brightgreen.svg?style=for-the-badge)
+# pyimgscan: open-source document scanning tool ![MIT License](https://img.shields.io/badge/LICENSE-MIT-brightgreen.svg?style=for-the-badge)
 
 ### Take a picture with your phone and convert it to a professional-looking scan.
 
 <p align="center"><img src="readme/diagram.png" width="80%" height="80%"/></p>
 
-### * Usage:
+### * Usage
 **`$ python3.7 ./pyimgscan.py`**
 ```
 usage: pyimgscan.py [-h] -i IMAGE [-I [INVERTED]]
@@ -17,7 +16,7 @@ The program will by default output a `corrected.png` and a `thresholded.png`
 
 <br>
 
-### * Dependencies:
+### * Dependencies
 ![Python3.7](https://img.shields.io/badge/python-3.7-blue.svg?style=for-the-badge)
 ```
 numpy==1.16.2
@@ -43,7 +42,7 @@ cd ./PyImgScan/
 ![GitHub](https://img.shields.io/badge/repo-github-lightgrey.svg?style=for-the-badge)   
 `git clone https://github.com/sammdu/pyimgscan.git`
 
-**3. Install Dependencies:**   
+**3. Install dependencies:**   
 ```
 cd pyimgscan/
 pip install -r requirements.txt
@@ -54,6 +53,12 @@ pip install -r requirements.txt
 python ./pyimgscan.py -i ./test/1.png
 ```
 Available examples: `./test/1.png` `./test/2.jpg` `./test/3.jpg`
+
+<br>
+
+### * TODO
+* fit polygon to edge image in order to account for incomplete contours
+* add a border / four anchor points for positioning and contour recognition.
 
 <br>
 
