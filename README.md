@@ -43,7 +43,7 @@ pip install -r requirements.txt
 ```
 python ./pyimgscan.py -i ./test/1.png
 ```
-Available examples: `./test/1.png``./test/2.jpg``./test/3.jpg`
+Available examples: `./test/1.png` `./test/2.jpg` `./test/3.jpg`
 
 * * *
 ### References:
