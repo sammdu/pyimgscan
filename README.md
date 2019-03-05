@@ -11,7 +11,7 @@ usage: pyimgscan.py [-h] -i IMAGE [-I [INVERTED]]
 ```
 The program will by default output a `corrected.png` and a `thresholded.png`
 * `-h` display the above help message
-* `-i` specify a path to an image file
+* `-i` specify a path to the source image file
 * `-I` also output an inverted binary image (white on black) to `thresholded_inverted.png`
 
 <br>
