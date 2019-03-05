@@ -3,6 +3,9 @@ corrected.png
 thresholded.png
 thresholded_inverted.png
 
+# private test images
+test/b.jpg
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
