@@ -1,5 +1,5 @@
 # pyimgscan - open-source scanning tool
-![MIT License](https://img.shields.io/badge/LICENSE-MIT-green.svg?style=for-the-badge)
+![MIT License](https://img.shields.io/badge/LICENSE-MIT-brightgreen.svg?style=for-the-badge)
 ### Take a picture with your phone and convert it to a professional-looking scan.
 
 <p align="center"><img src="readme/diagram.png" width="80%" height="80%"/></p>
