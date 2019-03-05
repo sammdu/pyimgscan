@@ -44,10 +44,9 @@ def getcorners(img_edge):
     #   outlines;
     # - the "cv2.CHAIN_APPROX_SIMPLE" approximation method returns coordinate points
     #   for the found outlines;
-    # - because the return of the contour function gives 'image', 'contours',
-    #   'heirarchy', we will only take the contours (outlines) for the current
-    #   application
-    img_contour, outlines, contour_heirarchy = cv2.findContours(img_contour, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    # - because the return of the contour function gives 'contours', 'heirarchy',
+    #   we will only take the contours (outlines) for the current application
+    outlines, contour_heirarchy = cv2.findContours(img_contour, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
     # sort the outlines by area from large to small, and only take the largest 4
     # outlines in order to speed up the process and not waste time
