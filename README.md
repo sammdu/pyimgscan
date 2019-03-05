@@ -1,17 +1,19 @@
-# pyimgscan - open-source document scanning tool
+# pyimgscan: open-source document scanning tool
 ![MIT License](https://img.shields.io/badge/LICENSE-MIT-brightgreen.svg?style=for-the-badge)
 
 ### Take a picture with your phone and convert it to a professional-looking scan.
 
 <p align="center"><img src="readme/diagram.png" width="80%" height="80%"/></p>
 
-### Usage:
+### * Usage:
 **`$ python3.7 ./pyimgscan.py`**
 ```
 usage: pyimgscan.py [-h] -i IMAGE [-I [INVERTED]]
 ```
 
-### Dependencies:
+<br>
+
+### * Dependencies:
 ![Python3.7](https://img.shields.io/badge/python-3.7-blue.svg?style=for-the-badge)
 ```
 numpy==1.16.2
@@ -19,13 +21,16 @@ opencv-contrib-python==4.0.0.21
 ```
 can also be found at `requirements.txt`
 
-### Setup with `virtualenv`
+<br>
+
+### * Setup with `virtualenv`
 **1. Set up virtual environment:**   
 ```
 virtualenv -p python3.7 PyImgScan/
 cd ./PyImgScan/
 ./bin/activate
 ```
+
 **2. Clone repository:**   
 
 ![GitLab](https://img.shields.io/badge/REPO-GitLab-blueviolet.svg?style=for-the-badge)   
@@ -45,6 +50,8 @@ pip install -r requirements.txt
 python ./pyimgscan.py -i ./test/1.png
 ```
 Available examples: `./test/1.png` `./test/2.jpg` `./test/3.jpg`
+
+<br>
 
 * * *
 ### References:
