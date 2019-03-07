@@ -3,6 +3,8 @@ import argparse
 
 from cvtools import resize
 from cvtools import perspective_transform
+from cvtools import getoutlines
+from cvtools import simple_erode
 
 # Parse command-line arguments with argparse
 ap = argparse.ArgumentParser()
@@ -11,13 +13,24 @@ ap.add_argument("-I", "--inverted", required = False, nargs='?', const="Ture", h
 args = vars(ap.parse_args())
 
 # READ INPUT IMAGE
-# img = cv2.imread('notecard.png')
 img = cv2.imread(args["image"])
 
-# BAISC PRE-PROCESSING TO OBTAIN A CANNY EDGE IMAGE
-def getedge(img):
+# if input image is empty, notify the user and quit program
+if img is None:
+    print()
+    print('The file does not exist or is empty!')
+    print('Please select a valid file!')
+    print()
+    exit()
+
+
+def preprocess(img):
+    """
+    BAISC PRE-PROCESSING TO OBTAIN A CANNY EDGE IMAGE
+    """
+
     # save the original image in a different variable
-    img_orig = img
+    img_orig = img.copy()
 
     # first calculate the ratio of the original image to the new height (500)
     # so we can scale the manipulated image back to the original size;
@@ -27,26 +40,46 @@ def getedge(img):
     img_scaled = resize(img, height = 500)
 
     img_gray = cv2.cvtColor(img_scaled, cv2.COLOR_BGR2GRAY)  # convert image to grayscale
-    img_gray = cv2.GaussianBlur(img_gray, (5, 5), 0)         # apply gaussian blur
-    img_edge = cv2.Canny(img_gray, 60, 200)                 # apply canny edge detection
+    img_gray = cv2.GaussianBlur(img_gray, (7, 7), 0)         # apply gaussian blur
+    img_edge = cv2.Canny(img_gray, 53, 200)                  # apply canny edge detection
 
     return img_orig, scale, img_scaled, img_edge
 
 
-# FUNCTION TO OBTAIN THE CORNERS OF A PIECE OF PAPER IN THE INPUT EDGE IMAGE
-def getcorners(img_edge):
+def gethull(img_edge):
+    """
+    1st ROUND OF OUTLINE FINDING, + CONVEX HULL
+    """
+
     # make a copy of the edge image because the following function manipulates
     # the input
-    img_contour = img_edge
+    img_hull = img_edge.copy()
 
-    # - find the possible oulines of the edge image using a built-in OpenCV function;
-    # - the "RETR_LIST" retreival mode returns a simple list of the found
-    #   outlines;
-    # - the "cv2.CHAIN_APPROX_SIMPLE" approximation method returns coordinate points
-    #   for the found outlines;
-    # - because the return of the contour function gives 'contours', 'heirarchy',
-    #   we will only take the contours (outlines) for the current application
-    outlines, contour_heirarchy = cv2.findContours(img_contour, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    # find outlines in the edge image
+    outlines = getoutlines(img_edge)
+
+    # draw convex hulls (fit polygon) for all outlines detected to 'img_contour'
+    for outline in range(len(outlines)):
+        hull = cv2.convexHull(outlines[outline])
+        cv2.drawContours(img_hull, [hull], 0, 255, 3)
+
+    # erode the hull image to make the outline closer to paper
+    img_hull = simple_erode(img_hull)
+
+    return img_hull
+
+
+def getcorners(img_hull):
+    """
+    2nd ROUND OF OUTLINE FINDING, + SORTING & APPROXIMATION
+    """
+
+    # make a copy of the edge image because the following function manipulates
+    # the input
+    img_outlines = img_hull.copy()
+
+    # find outlines in the convex hull image
+    outlines = getoutlines(img_outlines)
 
     # sort the outlines by area from large to small, and only take the largest 4
     # outlines in order to speed up the process and not waste time
@@ -80,11 +113,14 @@ def getcorners(img_edge):
 Main Proccess of the Program
 '''
 
-# Obtain the Canny edge image, scaled, along with its scale factor
-img_orig, scale, img_scaled, img_edge = getedge(img)
+# obtain the Canny edge image, scaled, along with its scale factor
+img_orig, scale, img_scaled, img_edge = preprocess(img)
 
-# Obtain corner points of the scaled image
-corners = getcorners(img_edge)
+# perform convex hull on edge image to prevent imcomplete outline
+img_hull = gethull(img_edge)
+
+# obtain 4 corner points of the convex hull image
+corners = getcorners(img_hull)
 
 # scale the corner points back to the original size of the image using the scale
 # calculated previously
@@ -104,7 +140,7 @@ cv2.imwrite('./corrected.png', img_corrected)
 #   option of the function is the actual threshold value
 # - if given the argument "-I" or "--inverted", output an inverted binary image,
 #   otherwise output a normal image
-if args["inverted"] != None:
+if args["inverted"] is not None:
 
     #img_thresh = cv2.threshold(img_corrected, 1, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
     img_thresh = cv2.threshold(img_corrected, 150, 255, cv2.THRESH_BINARY_INV)[1]
@@ -119,4 +155,3 @@ else:
 
     # write binary image to file
     cv2.imwrite('./thresholded.png', img_thresh)
-

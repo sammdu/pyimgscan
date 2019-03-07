@@ -57,7 +57,6 @@ Available examples: `./test/1.png` `./test/2.jpg` `./test/3.jpg`
 <br>
 
 ### * TODO
-* fit polygon to edge image in order to account for incomplete contours
 * add a border / four anchor points for positioning and contour recognition.
 
 <br>

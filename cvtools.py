@@ -15,6 +15,9 @@ List of functions:
 * perspective_transform(img, pts)
     - warps a deformed image into a straight, birds-eye view image,
       based on the corner points on the deformed image
+
+* getoutlines(img)
+    - retrieve outlines (contours) of an input image
 '''
 
 
@@ -160,3 +163,31 @@ def perspective_transform(img, pts):
     img_corrected = cv2.warpPerspective(img, matrix, (maxW, maxH))
 
     return img_corrected
+
+
+def getoutlines(img):
+    """
+    - find the possible oulines of the input image using a built-in OpenCV
+      function;
+    - the "RETR_LIST" retreival mode returns a simple list of the found
+      outlines;
+    - the "cv2.CHAIN_APPROX_SIMPLE" approximation method returns coordinate
+      points for the found outlines;
+    - because the return of the contour function gives 'contours', 'heirarchy',
+      we will only take the contours (outlines) for the current application
+    """
+
+    outlines = cv2.findContours(img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[0]
+    return outlines
+
+def simple_erode(img):
+    """
+    - apply simple erosion to the input image using built-in OpenCV functions;
+    - erosion kernel 3x3;
+    - 1 single iteration
+    """
+
+    ekernel = np.ones( (3, 3), np.uint8 )
+    eroded = cv2.erode(img, ekernel, iterations = 1)
+
+    return eroded
