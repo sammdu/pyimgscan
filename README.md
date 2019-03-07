@@ -57,7 +57,8 @@ Available examples: `./test/1.png` `./test/2.jpg` `./test/3.jpg`
 <br>
 
 ### * TODO
-* add a border / four anchor points for positioning and contour recognition.
+* add a border / four anchor points for positioning and contour recognition
+* build binaries with PyInstaller
 
 <br>
 
