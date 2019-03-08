@@ -57,9 +57,9 @@ Available examples: `./test/1.png` `./test/2.jpg` `./test/3.jpg`
 <br>
 
 ### * TODO
-* add shadow removal functionality
-  https://stackoverflow.com/questions/44047819/increase-image-brightness-without-overflow/44054699#44054699
-  https://stackoverflow.com/questions/44752240/how-to-remove-shadow-from-scanned-images-using-opencv
+* add shadow removal functionality   
+  https://stackoverflow.com/questions/44047819/increase-image-brightness-without-overflow/44054699#44054699   
+  https://stackoverflow.com/questions/44752240/how-to-remove-shadow-from-scanned-images-using-opencv   
 * add a border / four anchor points for positioning and contour recognition
 * build binaries with PyInstaller
 
