@@ -5,6 +5,7 @@ thresholded_inverted.png
 
 # private test images
 test/b.jpg
+RAW/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
