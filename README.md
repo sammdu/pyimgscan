@@ -57,6 +57,8 @@ Available examples: `./test/1.png` `./test/2.jpg` `./test/3.jpg`
 <br>
 
 ### * TODO
+* try Gaussian thresholding for better binary image results   
+  https://docs.opencv.org/3.4.0/d7/d4d/tutorial_py_thresholding.html   
 * add shadow removal functionality   
   https://stackoverflow.com/questions/44047819/increase-image-brightness-without-overflow/44054699#44054699   
   https://stackoverflow.com/questions/44752240/how-to-remove-shadow-from-scanned-images-using-opencv   
