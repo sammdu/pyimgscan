@@ -21,7 +21,7 @@ if img is None:
     print('The file does not exist or is empty!')
     print('Please select a valid file!')
     print()
-    exit()
+    exit(0)  # exit code zero means a clean exit with no output/errors etc.
 
 
 def preprocess(img):
