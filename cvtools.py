@@ -18,6 +18,9 @@ List of functions:
 
 * getoutlines(img)
     - retrieve outlines (contours) of an input image
+
+* simple_erode(img)
+    - apply erosion with a 3x3 kernel and for 1 single iteration
 '''
 
 
@@ -85,8 +88,8 @@ def resize(img, width=None, height=None, inter=cv2.INTER_AREA):
 '''
  - Call function 'perspective_transform()';
  - Supply an input image, then 4 corner points;
- - The function will return the corrected image.
- - order_points() is a helper function.
+ - The function will return the corrected image;
+ - order_points() is a helper function
 '''
 
 def order_points(pts):
@@ -180,6 +183,7 @@ def getoutlines(img):
     outlines = cv2.findContours(img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[0]
     return outlines
 
+
 def simple_erode(img):
     """
     - apply simple erosion to the input image using built-in OpenCV functions;
@@ -191,3 +195,16 @@ def simple_erode(img):
     eroded = cv2.erode(img, ekernel, iterations = 1)
 
     return eroded
+
+
+def simple_dilate(img):
+    """
+    - apply simple dilation to the input image using built-in OpenCV functions;
+    - dilation kernel 3x3;
+    - 1 single iteration
+    """
+
+    dkernel = np.ones( (3, 3), np.uint8 )
+    dilated = cv2.dilate(img, dkernel, iterations = 1)
+
+    return dilated

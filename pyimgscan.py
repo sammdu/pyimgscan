@@ -5,6 +5,7 @@ from cvtools import resize
 from cvtools import perspective_transform
 from cvtools import getoutlines
 from cvtools import simple_erode
+from cvtools import simple_dilate
 
 # Parse command-line arguments with argparse
 ap = argparse.ArgumentParser()
