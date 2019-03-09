@@ -5,8 +5,21 @@ import cv2
 '''
 List of functions:
 
+* simple_erode(img)
+    - apply erosion with a 3x3 kernel and for 1 single iteration
+
+* simple_dilate(img)
+    - apply dilation with a 3x3 kernel and for 1 single iteration
+
+* brightness_contrast(img, mult, add)
+    - adjust the brightness and contrast of the image by multiplying and
+      adding/subtracting values from the pixels;
+
 * resize(img, width=None, height=None, inter=cv2.INTER_AREA)
     - resizes the image to the input height, width, or both
+
+* getoutlines(img)
+    - retrieve outlines (contours) of an input image
 
 * order_points(pts)
     - arrange a list of corner points by coordinates, by the order of
@@ -15,13 +28,54 @@ List of functions:
 * perspective_transform(img, pts)
     - warps a deformed image into a straight, birds-eye view image,
       based on the corner points on the deformed image
-
-* getoutlines(img)
-    - retrieve outlines (contours) of an input image
-
-* simple_erode(img)
-    - apply erosion with a 3x3 kernel and for 1 single iteration
 '''
+
+
+def simple_erode(img):
+    """
+    - apply simple erosion to the input image using built-in OpenCV functions;
+    - erosion kernel 3x3;
+    - 1 single iteration
+    """
+
+    ekernel = np.ones( (3, 3), np.uint8 )
+    eroded = cv2.erode(img, ekernel, iterations = 1)
+
+    return eroded
+
+
+def simple_dilate(img):
+    """
+    - apply simple dilation to the input image using built-in OpenCV functions;
+    - dilation kernel 3x3;
+    - 1 single iteration
+    """
+
+    dkernel = np.ones( (3, 3), np.uint8 )
+    dilated = cv2.dilate(img, dkernel, iterations = 1)
+
+    return dilated
+
+
+def brightness_contrast(img, mult, add):
+    """
+    - allows brightness-contrast adjustment by multiplication and
+      addition / subtraction of pixel values;
+    - multiplication increases contrast while inevitably increasing overall
+      brightness; set by 'mult' parameter;
+    - addition or subtraction increases or decreases value (brightness) of
+      pixels; set by 'add' parameter, use negative values for subtraction
+    """
+
+    # set a blank canvas
+    img_adj = np.zeros(img.shape, img.dtype)
+
+    # multiply pixels by 'mult', add by 'add';
+    # the multiplication will increase contrast, and adding/subtracting will
+    # adjust the brightness
+    img_adj = cv2.convertScaleAbs(img, alpha=1.56, beta=-60)
+
+    return img_adj
 
 
 # imutils resize() function.
@@ -52,8 +106,11 @@ THE SOFTWARE.
 '''
 
 def resize(img, width=None, height=None, inter=cv2.INTER_AREA):
-    # initialize the dimensions of the input image and obtain
-    # the image size
+    """
+    initialize the dimensions of the input image and obtain
+    the image size
+    """
+
     dim = None
     (h, w) = img.shape[:2]
 
@@ -83,7 +140,23 @@ def resize(img, width=None, height=None, inter=cv2.INTER_AREA):
     return resized
 
 
-# 4-Point Perspective Transform Function Set.
+def getoutlines(img):
+    """
+    - find the possible oulines of the input image using a built-in OpenCV
+      function;
+    - the "RETR_LIST" retreival mode returns a simple list of the found
+      outlines;
+    - the "cv2.CHAIN_APPROX_SIMPLE" approximation method returns coordinate
+      points for the found outlines;
+    - because the return of the contour function gives 'contours', 'heirarchy',
+      we will only take the contours (outlines) for the current application
+    """
+
+    outlines = cv2.findContours(img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[0]
+    return outlines
+
+
+# 4-POINT PERSPECTIVE TRANSFORM FUNCTION SET.
 
 '''
  - Call function 'perspective_transform()';
@@ -166,45 +239,3 @@ def perspective_transform(img, pts):
     img_corrected = cv2.warpPerspective(img, matrix, (maxW, maxH))
 
     return img_corrected
-
-
-def getoutlines(img):
-    """
-    - find the possible oulines of the input image using a built-in OpenCV
-      function;
-    - the "RETR_LIST" retreival mode returns a simple list of the found
-      outlines;
-    - the "cv2.CHAIN_APPROX_SIMPLE" approximation method returns coordinate
-      points for the found outlines;
-    - because the return of the contour function gives 'contours', 'heirarchy',
-      we will only take the contours (outlines) for the current application
-    """
-
-    outlines = cv2.findContours(img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)[0]
-    return outlines
-
-
-def simple_erode(img):
-    """
-    - apply simple erosion to the input image using built-in OpenCV functions;
-    - erosion kernel 3x3;
-    - 1 single iteration
-    """
-
-    ekernel = np.ones( (3, 3), np.uint8 )
-    eroded = cv2.erode(img, ekernel, iterations = 1)
-
-    return eroded
-
-
-def simple_dilate(img):
-    """
-    - apply simple dilation to the input image using built-in OpenCV functions;
-    - dilation kernel 3x3;
-    - 1 single iteration
-    """
-
-    dkernel = np.ones( (3, 3), np.uint8 )
-    dilated = cv2.dilate(img, dkernel, iterations = 1)
-
-    return dilated

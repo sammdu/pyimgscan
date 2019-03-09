@@ -6,11 +6,14 @@ from cvtools import perspective_transform
 from cvtools import getoutlines
 from cvtools import simple_erode
 from cvtools import simple_dilate
+from cvtools import brightness_contrast
 
 # Parse command-line arguments with argparse
 ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", required = True, help = "Path to the image to be corrected.")
-ap.add_argument("-I", "--inverted", required = False, nargs='?', const="Ture", help = "Invert the output if this argument present.")
+ap.add_argument("-i", "--image", required = True,
+    help = "Path to the image to be corrected.")
+ap.add_argument("-I", "--inverted", required = False, nargs='?', const="Ture",
+    help = "Invert the output if this argument present.")
 args = vars(ap.parse_args())
 
 # READ INPUT IMAGE
@@ -33,16 +36,21 @@ def preprocess(img):
     # save the original image in a different variable
     img_orig = img.copy()
 
-    # first calculate the ratio of the original image to the new height (500)
+    # first calculate the ratio of the original image to the new height (500px)
     # so we can scale the manipulated image back to the original size;
     scale = img.shape[0] / 500.0
 
     # - scale the image down to 500px in height;
     img_scaled = resize(img, height = 500)
 
-    img_gray = cv2.cvtColor(img_scaled, cv2.COLOR_BGR2GRAY)  # convert image to grayscale
-    img_gray = cv2.GaussianBlur(img_gray, (7, 7), 0)         # apply gaussian blur
-    img_edge = cv2.Canny(img_gray, 53, 200)                  # apply canny edge detection
+    # convert image to grayscale
+    img_gray = cv2.cvtColor(img_scaled, cv2.COLOR_BGR2GRAY)
+
+    # apply gaussian blur with a 7x7 kernel
+    img_gray = cv2.GaussianBlur(img_gray, (7, 7), 0)
+
+    # apply canny edge detection
+    img_edge = cv2.Canny(img_gray, 53, 200)
 
     return img_orig, scale, img_scaled, img_edge
 
