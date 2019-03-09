@@ -7,6 +7,7 @@ from cvtools import getoutlines
 from cvtools import simple_erode
 from cvtools import simple_dilate
 from cvtools import brightness_contrast
+from cvtools import blank
 
 # Parse command-line arguments with argparse
 ap = argparse.ArgumentParser()
@@ -62,10 +63,13 @@ def gethull(img_edge):
 
     # make a copy of the edge image because the following function manipulates
     # the input
-    img_hull = img_edge.copy()
+    img_prehull = img_edge.copy()
 
-    # find outlines in the edge image
-    outlines = getoutlines(img_edge)
+    # find outlines in the (newly copied) edge image
+    outlines = getoutlines(img_prehull)
+
+    # create a blank image for convex hull operation
+    img_hull = blank(img_prehull.shape, img_prehull.dtype, "0")
 
     # draw convex hulls (fit polygon) for all outlines detected to 'img_contour'
     for outline in range(len(outlines)):
@@ -151,15 +155,13 @@ cv2.imwrite('./corrected.png', img_corrected)
 #   otherwise output a normal image
 if args["inverted"] is not None:
 
-    #img_thresh = cv2.threshold(img_corrected, 1, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-    img_thresh = cv2.threshold(img_corrected, 150, 255, cv2.THRESH_BINARY_INV)[1]
+    img_thresh = cv2.threshold(img_corrected, 135, 255, cv2.THRESH_BINARY_INV)[1]
 
     # write binary image to file
     cv2.imwrite('./thresholded_inverted.png', img_thresh)
 
 else:
 
-    #img_thresh = cv2.threshold(img_corrected, 1, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
     img_thresh = cv2.threshold(img_corrected, 135, 255, cv2.THRESH_BINARY)[1]
 
     # write binary image to file

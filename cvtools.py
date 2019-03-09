@@ -1,9 +1,11 @@
 import numpy as np
 import cv2
 
-
-'''
+"""
 List of functions:
+
+* blank(shape, dtype = np.uint8, filler = '0')
+    - creates a blank image (NumPy array) with either '0's or '1's
 
 * simple_erode(img)
     - apply erosion with a 3x3 kernel and for 1 single iteration
@@ -28,7 +30,29 @@ List of functions:
 * perspective_transform(img, pts)
     - warps a deformed image into a straight, birds-eye view image,
       based on the corner points on the deformed image
-'''
+"""
+
+def blank(shape, dtype = np.uint8, filler = '0'):
+    """
+    - creates a blank image (NumPy array) with either zeros or ones using
+      built-in NumPy functions;
+    - "shape" sets the shape of the blank image (array); takes tuples;
+    - "dtype" sets the data type of the blank image, defaults to 8-bit
+      unsigned integer; takes NumPy data-type objects;
+    - "filler" sets the filler value of all pixels of the blank image, defaults
+      to zeros; takes strings of either "0" or "1"
+    """
+
+    if filler == "0":
+        blank = np.zeros(shape, dtype)
+
+    elif filler == "1":
+        blank = np.ones(shape, dtype)
+
+    else:
+        return "BAD FILLER VALUE; MUST BE STRINGS OF '0' OR '1'"
+
+    return blank
 
 
 def simple_erode(img):
@@ -62,15 +86,15 @@ def brightness_contrast(img, mult, add):
     - allows brightness-contrast adjustment by multiplication and
       addition / subtraction of pixel values;
     - multiplication increases contrast while inevitably increasing overall
-      brightness; set by 'mult' parameter;
+      brightness; set by "mult" parameter;
     - addition or subtraction increases or decreases value (brightness) of
-      pixels; set by 'add' parameter, use negative values for subtraction
+      pixels; set by "add" parameter, use negative values for subtraction
     """
 
     # set a blank canvas
     img_adj = np.zeros(img.shape, img.dtype)
 
-    # multiply pixels by 'mult', add by 'add';
+    # multiply pixels by "mult", add by "add";
     # the multiplication will increase contrast, and adding/subtracting will
     # adjust the brightness
     img_adj = cv2.convertScaleAbs(img, alpha=1.56, beta=-60)
@@ -148,7 +172,7 @@ def getoutlines(img):
       outlines;
     - the "cv2.CHAIN_APPROX_SIMPLE" approximation method returns coordinate
       points for the found outlines;
-    - because the return of the contour function gives 'contours', 'heirarchy',
+    - because the return of the contour function gives "contours", "heirarchy",
       we will only take the contours (outlines) for the current application
     """
 
@@ -159,7 +183,7 @@ def getoutlines(img):
 # 4-POINT PERSPECTIVE TRANSFORM FUNCTION SET.
 
 '''
- - Call function 'perspective_transform()';
+ - Call function "perspective_transform()";
  - Supply an input image, then 4 corner points;
  - The function will return the corrected image;
  - order_points() is a helper function
@@ -168,8 +192,8 @@ def getoutlines(img):
 def order_points(pts):
     """
     - returns a list of corner points in order
-    - input 'pts' will be a numpy array
-    - 'corners' list will go in the following order:
+    - input "pts" will be a numpy array
+    - "corners" list will go in the following order:
       0.    TOP-LEFT
       1.    TOP-RIGHT
       2. BOTTOM-RIGHT
@@ -200,11 +224,11 @@ def perspective_transform(img, pts):
     """
     - applies perspective transform to an image in order to straighten it,
       based on four given corner points
-    - input 'pts' will be a numpy array
+    - input "pts" will be a numpy array
     - returns a corrected image after applying perspective transform
     """
 
-    # call the 'order_points()' function to put corner points in order,
+    # call the "order_points()" function to put corner points in order,
     # then assign each corner point to its respective variable
     corners_old = order_points(pts)
     tl, tr, br, bl = corners_old
