@@ -9,7 +9,7 @@ from cvtools import simple_dilate
 from cvtools import brightness_contrast
 from cvtools import blank
 
-# Parse command-line arguments with argparse
+# PARSE COMMAND-LINE ARGUMENTS WITH ARGPARSE
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required = True,
     help = "Path to the image to be corrected.")
@@ -24,36 +24,43 @@ img = cv2.imread(args["image"])
 if img is None:
     print()
     print('The file does not exist or is empty!')
-    print('Please select a valid file!')
+    print('Please select a valid image file!')
     print()
     exit(0)  # exit code zero means a clean exit with no output/errors etc.
 
+
+'''
+Primary Functions
+'''
 
 def preprocess(img):
     """
     BAISC PRE-PROCESSING TO OBTAIN A CANNY EDGE IMAGE
     """
 
-    # save the original image in a different variable
-    img_orig = img.copy()
+    # increase contrast between paper and background
+    img_adj = brightness_contrast(img, 1.56, -60)
 
-    # first calculate the ratio of the original image to the new height (500px)
-    # so we can scale the manipulated image back to the original size;
-    scale = img.shape[0] / 500.0
+    # calculate the ratio of the image to the new height (500px) so we
+    # can scale the manipulated image back to the original size later
+    scale = img_adj.shape[0] / 500.0
 
-    # - scale the image down to 500px in height;
-    img_scaled = resize(img, height = 500)
+    # scale the image down to 500px in height;
+    img_scaled = resize(img_adj, height = 500)
 
     # convert image to grayscale
     img_gray = cv2.cvtColor(img_scaled, cv2.COLOR_BGR2GRAY)
 
-    # apply gaussian blur with a 7x7 kernel
-    img_gray = cv2.GaussianBlur(img_gray, (7, 7), 0)
+    # apply gaussian blur with a 11x11 kernel
+    img_gray = cv2.GaussianBlur(img_gray, (11, 11), 0)
 
     # apply canny edge detection
-    img_edge = cv2.Canny(img_gray, 53, 200)
+    img_edge = cv2.Canny(img_gray, 60, 245)
 
-    return img_orig, scale, img_scaled, img_edge
+    # dilate the edge image to connect any small gaps
+    img_edge = simple_dilate(img_edge)
+
+    return img_adj, scale, img_scaled, img_edge
 
 
 def gethull(img_edge):
@@ -69,7 +76,7 @@ def gethull(img_edge):
     outlines = getoutlines(img_prehull)
 
     # create a blank image for convex hull operation
-    img_hull = blank(img_prehull.shape, img_prehull.dtype, "0")
+    img_hull = blank(img_prehull.shape, img_prehull.dtype, '0')
 
     # draw convex hulls (fit polygon) for all outlines detected to 'img_contour'
     for outline in range(len(outlines)):
@@ -126,8 +133,9 @@ def getcorners(img_hull):
 Main Proccess of the Program
 '''
 
-# obtain the Canny edge image, scaled, along with its scale factor
-img_orig, scale, img_scaled, img_edge = preprocess(img)
+# obtain the adjusted image, scaled image along with its scale factor, and the
+# Canny edge image
+img_adj, scale, img_scaled, img_edge = preprocess(img)
 
 # perform convex hull on edge image to prevent imcomplete outline
 img_hull = gethull(img_edge)
@@ -141,27 +149,29 @@ corners = corners.reshape(4, 2) * scale
 
 # finally correct the perspective of the image by applying four-point
 # perspective transform
-img_corrected = perspective_transform(img_orig, corners)
-
-# convert the corrected image to grayscale
-img_corrected = cv2.cvtColor(img_corrected, cv2.COLOR_BGR2GRAY)
+img_corrected = perspective_transform(img_adj, corners)
 
 # write corrected image to file
 cv2.imwrite('./corrected.png', img_corrected)
 
-# - conduct simple binary thresholding for ease of further processing; the first
-#   option of the function is the actual threshold value
-# - if given the argument "-I" or "--inverted", output an inverted binary image,
-#   otherwise output a normal image
+# convert the corrected image to grayscale to prepare for thresholding
+img_corrected = cv2.cvtColor(img_corrected, cv2.COLOR_BGR2GRAY)
+
+# if given the argument "-I" or "--inverted", output an inverted binary image,
+# otherwise output a normal image
 if args["inverted"] is not None:
 
+    # conduct simple binary thresholding for ease of further processing; the first
+    # option of the function is the actual threshold value
     img_thresh = cv2.threshold(img_corrected, 135, 255, cv2.THRESH_BINARY_INV)[1]
 
-    # write binary image to file
+    # write inverted binary image to file
     cv2.imwrite('./thresholded_inverted.png', img_thresh)
 
 else:
 
+    # conduct simple binary thresholding for ease of further processing; the first
+    # option of the function is the actual threshold value
     img_thresh = cv2.threshold(img_corrected, 135, 255, cv2.THRESH_BINARY)[1]
 
     # write binary image to file

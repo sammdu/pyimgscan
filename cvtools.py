@@ -88,18 +88,15 @@ def brightness_contrast(img, mult, add):
     - multiplication increases contrast while inevitably increasing overall
       brightness; set by "mult" parameter;
     - addition or subtraction increases or decreases value (brightness) of
-      pixels; set by "add" parameter, use negative values for subtraction
+      pixels; set by "add" parameter, use negative values for subtraction;
     """
-
-    # set a blank canvas
-    img_adj = np.zeros(img.shape, img.dtype)
 
     # multiply pixels by "mult", add by "add";
     # the multiplication will increase contrast, and adding/subtracting will
     # adjust the brightness
-    img_adj = cv2.convertScaleAbs(img, alpha=1.56, beta=-60)
+    adjusted = cv2.convertScaleAbs(img, alpha=float(mult), beta=float(add))
 
-    return img_adj
+    return adjusted
 
 
 # imutils resize() function.
