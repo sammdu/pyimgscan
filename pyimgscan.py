@@ -80,7 +80,11 @@ def gethull(img_edge):
 
     # draw convex hulls (fit polygon) for all outlines detected to 'img_contour'
     for outline in range(len(outlines)):
+
         hull = cv2.convexHull(outlines[outline])
+
+        # parameters: source image, outlines (contours),
+        #             contour index (-1 for all), color, thickness
         cv2.drawContours(img_hull, [hull], 0, 255, 3)
 
     # erode the hull image to make the outline closer to paper
