@@ -11,10 +11,17 @@ from cvtools import blank
 
 # PARSE COMMAND-LINE ARGUMENTS WITH ARGPARSE
 ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", required = True,
-    help = "Path to the image to be corrected.")
-ap.add_argument("-I", "--inverted", required = False, nargs='?', const="Ture",
-    help = "Invert the output if this argument present.")
+ap.add_argument(
+    "-i", "--image", required=True, help="Path to the image to be corrected."
+)
+ap.add_argument(
+    "-I",
+    "--inverted",
+    required=False,
+    nargs="?",
+    const="Ture",
+    help="Invert the output if this argument present.",
+)
 args = vars(ap.parse_args())
 
 # READ INPUT IMAGE
@@ -23,15 +30,16 @@ img = cv2.imread(args["image"])
 # if input image is empty, notify the user and quit program
 if img is None:
     print()
-    print('The file does not exist or is empty!')
-    print('Please select a valid image file!')
+    print("The file does not exist or is empty!")
+    print("Please select a valid image file!")
     print()
     exit(0)  # exit code zero means a clean exit with no output/errors etc.
 
 
-'''
+"""
 Primary Functions
-'''
+"""
+
 
 def preprocess(img):
     """
@@ -46,7 +54,7 @@ def preprocess(img):
     scale = img_adj.shape[0] / 500.0
 
     # scale the image down to 500px in height;
-    img_scaled = resize(img_adj, height = 500)
+    img_scaled = resize(img_adj, height=500)
 
     # convert image to grayscale
     img_gray = cv2.cvtColor(img_scaled, cv2.COLOR_BGR2GRAY)
@@ -76,7 +84,7 @@ def gethull(img_edge):
     outlines = getoutlines(img_prehull)
 
     # create a blank image for convex hull operation
-    img_hull = blank(img_prehull.shape, img_prehull.dtype, '0')
+    img_hull = blank(img_prehull.shape, img_prehull.dtype, "0")
 
     # draw convex hulls (fit polygon) for all outlines detected to 'img_contour'
     for outline in range(len(outlines)):
@@ -107,7 +115,7 @@ def getcorners(img_hull):
 
     # sort the outlines by area from large to small, and only take the largest 4
     # outlines in order to speed up the process and not waste time
-    outlines = sorted(outlines, key = cv2.contourArea, reverse = True)[:4]
+    outlines = sorted(outlines, key=cv2.contourArea, reverse=True)[:4]
 
     # loop over outlines
     for outline in outlines:
@@ -133,9 +141,9 @@ def getcorners(img_hull):
     return corners
 
 
-'''
+"""
 Main Proccess of the Program
-'''
+"""
 
 # obtain the adjusted image, scaled image along with its scale factor, and the
 # Canny edge image
@@ -156,7 +164,7 @@ corners = corners.reshape(4, 2) * scale
 img_corrected = perspective_transform(img_adj, corners)
 
 # write corrected image to file
-cv2.imwrite('./corrected.png', img_corrected)
+cv2.imwrite("./corrected.png", img_corrected)
 
 # convert the corrected image to grayscale to prepare for thresholding
 img_corrected = cv2.cvtColor(img_corrected, cv2.COLOR_BGR2GRAY)
@@ -170,7 +178,7 @@ if args["inverted"] is not None:
     img_thresh = cv2.threshold(img_corrected, 135, 255, cv2.THRESH_BINARY_INV)[1]
 
     # write inverted binary image to file
-    cv2.imwrite('./thresholded_inverted.png', img_thresh)
+    cv2.imwrite("./thresholded_inverted.png", img_thresh)
 
 else:
 
@@ -179,4 +187,4 @@ else:
     img_thresh = cv2.threshold(img_corrected, 135, 255, cv2.THRESH_BINARY)[1]
 
     # write binary image to file
-    cv2.imwrite('./thresholded.png', img_thresh)
+    cv2.imwrite("./thresholded.png", img_thresh)
