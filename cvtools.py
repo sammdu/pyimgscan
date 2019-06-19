@@ -32,7 +32,8 @@ List of functions:
       based on the corner points on the deformed image
 """
 
-def blank(shape, dtype = np.uint8, filler = '0'):
+
+def blank(shape, dtype=np.uint8, filler="0"):
     """
     - creates a blank image (NumPy array) with either zeros or ones using
       built-in NumPy functions;
@@ -62,8 +63,8 @@ def simple_erode(img):
     - 1 single iteration
     """
 
-    ekernel = np.ones( (3, 3), np.uint8 )
-    eroded = cv2.erode(img, ekernel, iterations = 1)
+    ekernel = np.ones((3, 3), np.uint8)
+    eroded = cv2.erode(img, ekernel, iterations=1)
 
     return eroded
 
@@ -75,8 +76,8 @@ def simple_dilate(img):
     - 1 single iteration
     """
 
-    dkernel = np.ones( (3, 3), np.uint8 )
-    dilated = cv2.dilate(img, dkernel, iterations = 1)
+    dkernel = np.ones((3, 3), np.uint8)
+    dilated = cv2.dilate(img, dkernel, iterations=1)
 
     return dilated
 
@@ -101,7 +102,7 @@ def brightness_contrast(img, mult, add):
 
 # imutils resize() function.
 
-'''
+"""
 https://github.com/jrosebr1/imutils
 MIT License.
 
@@ -124,7 +125,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-'''
+"""
+
 
 def resize(img, width=None, height=None, inter=cv2.INTER_AREA):
     """
@@ -179,23 +181,28 @@ def getoutlines(img):
 
 # 4-POINT PERSPECTIVE TRANSFORM FUNCTION SET.
 
-'''
+"""
  - Call function "perspective_transform()";
  - Supply an input image, then 4 corner points;
  - The function will return the corrected image;
  - order_points() is a helper function
-'''
+"""
+
 
 def order_points(pts):
     """
     - returns a list of corner points in order
-    - input "pts" will be a numpy array
+    - input "pts" will be a numpy array; will convert python list automatically;
     - "corners" list will go in the following order:
       0.    TOP-LEFT
       1.    TOP-RIGHT
       2. BOTTOM-RIGHT
       4. BOTTOM-LEFT
     """
+
+    # automatically convert a python list to a numpy array
+    if str(type(pts)) != "<class 'numpy.ndarray'>":
+        pts = np.array(pts)
 
     # initialize an empty list to store the corner points
     corners = np.zeros((4, 2), dtype="float32")
@@ -233,26 +240,23 @@ def perspective_transform(img, pts):
     # calculate the WIDTH of the corrected image as follows:
     # > find the distance between the top points and the bottom points;
     # > find the maximum of the two distances, make it the new width.
-    distT = np.sqrt( ((tr[0] - tl[0]) ** 2) + ((tr[1] - tl[1]) ** 2) )
-    distB = np.sqrt( ((br[0] - bl[0]) ** 2) + ((br[1] - bl[1]) ** 2) )
-    maxW = max( int(distT), int(distB) )
+    distT = np.sqrt(((tr[0] - tl[0]) ** 2) + ((tr[1] - tl[1]) ** 2))
+    distB = np.sqrt(((br[0] - bl[0]) ** 2) + ((br[1] - bl[1]) ** 2))
+    maxW = max(int(distT), int(distB))
 
     # calculate the HEIGHT of the corrected image as follows:
     # > find the distance between the left points and the right points;
     # > find the maximum of the two distances, make it the new height.
-    distL = np.sqrt( ((tl[0] - bl[0]) ** 2) + ((tl[1] - bl[1]) ** 2) )
-    distR = np.sqrt( ((tr[0] - br[0]) ** 2) + ((tr[1] - br[1]) ** 2) )
-    maxH = max( int(distL), int(distR) )
+    distL = np.sqrt(((tl[0] - bl[0]) ** 2) + ((tl[1] - bl[1]) ** 2))
+    distR = np.sqrt(((tr[0] - br[0]) ** 2) + ((tr[1] - br[1]) ** 2))
+    maxH = max(int(distL), int(distR))
 
     # define corner points for the corrected image based on calculations
     # done above;
     # the same order of corners are followed
-    corners_corrected = np.array([
-        [       0,        0],
-        [maxW - 1,        0],
-        [maxW - 1, maxH - 1],
-        [       0, maxH - 1]
-    ], dtype="float32")
+    corners_corrected = np.array(
+        [[0, 0], [maxW - 1, 0], [maxW - 1, maxH - 1], [0, maxH - 1]], dtype="float32"
+    )
 
     # using OpenCV, calculate a transform matrix then apply it to create
     # the corrected image
