@@ -65,6 +65,7 @@ Available examples: `./test/1.png` `./test/2.jpg` `./test/3.jpg`
   https://stackoverflow.com/questions/44752240/how-to-remove-shadow-from-scanned-images-using-opencv   
 * add a border / four anchor points for better positioning and more reliable contour recognition
 * build binaries with PyInstaller
+* support multi-color thresholding
 
 <br>
 
