@@ -58,6 +58,7 @@ Available examples: `./test/1.png` `./test/2.jpg` `./test/3.jpg`
 
 ### * TODO
 * unify average brightness for better adaptation to different lighting of input images
+* instead of convex hull, try to always complete a 4-corner-polygon
 * try Gaussian thresholding for better binary image results   
   https://docs.opencv.org/3.4.0/d7/d4d/tutorial_py_thresholding.html   
 * add shadow removal functionality   
