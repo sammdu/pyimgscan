@@ -20,7 +20,7 @@ The program will by default output a `corrected.png` and a `thresholded.png`
 ![Python3.7](https://img.shields.io/badge/python-3.7-blue.svg?style=for-the-badge)
 ```
 numpy==1.16.2
-opencv-contrib-python==4.0.0.21
+opencv-contrib-python==4.2.0.32
 ```
 can also be found at `requirements.txt`
 
