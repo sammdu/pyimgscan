@@ -5,7 +5,7 @@
 <p align="center"><img src="readme/diagram.png" width="80%" height="80%"/></p>
 
 ### * Usage
-**`$ python3.7 ./pyimgscan.py`**
+**`$ python3.9 ./pyimgscan.py`**
 ```
 usage: pyimgscan.py [-h] -i IMAGE [-I [INVERTED]]
 ```
@@ -17,7 +17,7 @@ The program will by default output a `corrected.png` and a `thresholded.png`
 <br>
 
 ### * Dependencies
-![Python3.7](https://img.shields.io/badge/python-3.7-blue.svg?style=for-the-badge)
+![Python3.9](https://img.shields.io/badge/python-3.9-blue.svg?style=for-the-badge)
 ```
 numpy==1.16.2
 opencv-contrib-python==4.2.0.32
@@ -29,7 +29,7 @@ can also be found at `requirements.txt`
 ### * Setup with `virtualenv`
 **1. Set up virtual environment:**   
 ```
-virtualenv -p python3.7 PyImgScan/
+virtualenv -p python3.9 PyImgScan/
 cd ./PyImgScan/
 ./bin/activate
 ```
